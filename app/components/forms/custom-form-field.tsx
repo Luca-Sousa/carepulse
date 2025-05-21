@@ -14,6 +14,9 @@ import Image from "next/image";
 import "react-phone-number-input/style.css";
 import PhoneInput from "react-phone-number-input";
 import { E164Number } from "libphonenumber-js/core";
+import DatePicker from "react-datepicker";
+import { ptBR } from "date-fns/locale/pt-BR";
+import "react-datepicker/dist/react-datepicker.css";
 
 interface CustomFormFieldPros {
   control: Control<any>;
@@ -37,7 +40,15 @@ const RenderField = ({
   field: any;
   props: CustomFormFieldPros;
 }) => {
-  const { fieldType, placeholder, iconSrc, iconAlt } = props;
+  const {
+    fieldType,
+    placeholder,
+    iconSrc,
+    iconAlt,
+    showTimeSelect,
+    dateFormat,
+    renderSkeleton,
+  } = props;
 
   switch (props.fieldType) {
     case FormFieldType.INPUT:
@@ -73,10 +84,34 @@ const RenderField = ({
             value={field.value as E164Number | undefined}
             onChange={field.onChange}
             className="input-phone"
-            {...field}
           />
         </FormControl>
       );
+    case FormFieldType.DATE_PICKER:
+      return (
+        <div className="flex rounded-md border border-dark-500 bg-dark-400">
+          <Image
+            src="/assets/icons/calendar.svg"
+            alt="ícone de calendário"
+            width={24}
+            height={24}
+            className="ml-2"
+          />
+          <FormControl>
+            <DatePicker
+              selected={field.value}
+              onChange={(date) => field.onChange(date)}
+              locale={ptBR}
+              dateFormat={dateFormat ?? "dd/MM/yyyy"}
+              showTimeSelect={showTimeSelect ?? false}
+              timeInputLabel="Time:"
+              wrapperClassName="date-picker"
+            />
+          </FormControl>
+        </div>
+      );
+    case FormFieldType.SKELETON:
+      return renderSkeleton ? renderSkeleton(field) : null;
 
     default:
       break;
