@@ -6,33 +6,89 @@ import { Form, FormControl } from "@/app/components/ui/form";
 import CustomFormField from "./custom-form-field";
 import SubmitButton from "./submit-button";
 import { useState } from "react";
-import { userFormValidation, UserFormValidation } from "@/lib/validation";
+import { patientFormValidation, PatientFormValidation } from "@/lib/validation";
 import { useRouter } from "next/navigation";
 import { FormFieldType } from "./patient-form";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
-import { Doctors, GENDER_OPTIONS, IdentificationTypes } from "@/constants";
+import {
+  Doctors,
+  GENDER_OPTIONS,
+  IdentificationTypes,
+  PatientFormDefaultValues,
+} from "@/constants";
 import { Label } from "../ui/label";
 import { SelectItem } from "../ui/select";
 import Image from "next/image";
 import FileUploader from "../FileUploader";
+import { registerPatient } from "@/lib/actions/patient.actions";
 
 const RegisterForm = ({ user }: { user: User }) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
-  const form = useForm<UserFormValidation>({
-    resolver: zodResolver(userFormValidation),
+  const form = useForm<PatientFormValidation>({
+    resolver: zodResolver(patientFormValidation),
     defaultValues: {
-      name: "",
-      email: "",
-      phone: "",
+      ...PatientFormDefaultValues,
+      name: user.name,
+      email: user.email,
+      phone: user.phone,
     },
   });
 
-  const onSubmit = async ({ name, email, phone }: UserFormValidation) => {
+  const onSubmit = async (values: PatientFormValidation) => {
     setIsLoading(true);
 
-    console.log(name, email, phone);
+    let formData;
+
+    if (
+      values.identificationDocument &&
+      values.identificationDocument.length > 0
+    ) {
+      const blobFile = new Blob([values.identificationDocument[0]], {
+        type: values.identificationDocument[0].type,
+      });
+
+      formData = new FormData();
+      formData.append("blobFile", blobFile);
+      formData.append("fileName", values.identificationDocument[0].name);
+    }
+
+    try {
+      const patient = {
+        userId: user.$id,
+        name: values.name,
+        email: values.email,
+        phone: values.phone,
+        birthDate: new Date(values.birthDate),
+        gender: values.gender,
+        address: values.address,
+        occupation: values.occupation,
+        emergencyContactName: values.emergencyContactName,
+        emergencyContactNumber: values.emergencyContactNumber,
+        primaryPhysician: values.primaryPhysician,
+        insuranceProvider: values.insuranceProvider,
+        insurancePolicyNumber: values.insurancePolicyNumber,
+        allergies: values.allergies,
+        currentMedication: values.currentMedication,
+        familyMedicalHistory: values.familyMedicalHistory,
+        pastMedicalHistory: values.pastMedicalHistory,
+        identificationType: values.identificationType,
+        identificationNumber: values.identificationNumber,
+        identificationDocument: values.identificationDocument
+          ? formData
+          : undefined,
+        privacyConsent: values.privacyConsent,
+      };
+
+      const newPatient = await registerPatient(patient);
+
+      if (newPatient) router.push(`/patients/${user.$id}/new-appointment`);
+    } catch (error) {
+      console.error(error);
+    }
+
+    setIsLoading(false);
   };
 
   return (
