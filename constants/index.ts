@@ -102,3 +102,18 @@ export const StatusIcon = {
   pending: "/assets/icons/pending.svg",
   cancelled: "/assets/icons/cancelled.svg",
 };
+
+export const STATUS_OPTIONS = [
+  {
+    value: "scheduled",
+    label: "agendado",
+  },
+  {
+    value: "pending",
+    label: "pendente",
+  },
+  {
+    value: "cancelled",
+    label: "cancelado",
+  },
+];

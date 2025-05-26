@@ -2,10 +2,18 @@ import Image from "next/image";
 import Link from "next/link";
 import StatCard from "../components/stat-card";
 import { getRecentAppointmentList } from "@/lib/actions/appointment.actions";
+import { columns } from "../components/table/columns";
+import { DataTable } from "../components/table/data-table";
 
 const Admin = async () => {
   const appointments = await getRecentAppointmentList();
-  const { scheduledCount, pendingCount, cancelledCount } = appointments;
+  const {
+    scheduledCount,
+    pendingCount,
+    cancelledCount,
+    documents,
+    totalCount,
+  } = appointments;
 
   return (
     <div className="mx-auto flex max-w-7xl flex-col space-y-14">
@@ -53,6 +61,8 @@ const Admin = async () => {
             icon="/assets/icons/cancelled.svg"
           />
         </section>
+
+        <DataTable columns={columns} data={documents} />
       </main>
     </div>
   );
