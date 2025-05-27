@@ -7,13 +7,8 @@ import { DataTable } from "../components/table/data-table";
 
 const Admin = async () => {
   const appointments = await getRecentAppointmentList();
-  const {
-    scheduledCount,
-    pendingCount,
-    cancelledCount,
-    documents,
-    totalCount,
-  } = appointments;
+  const { scheduledCount, pendingCount, cancelledCount, documents } =
+    appointments;
 
   return (
     <div className="mx-auto flex max-w-7xl flex-col space-y-14">

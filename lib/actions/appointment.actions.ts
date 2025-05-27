@@ -1,6 +1,6 @@
 "use server";
 
-import { ID, Models, Query } from "node-appwrite";
+import { ID, Query } from "node-appwrite";
 import {
   APPOINTMENT_COLLECTION_ID,
   DATABASE_ID,
@@ -41,15 +41,7 @@ export const getAppointment = async (appointmentId: string) => {
   }
 };
 
-type AppointmentsDTO = {
-  totalCount: number;
-  scheduledCount: number;
-  pendingCount: number;
-  cancelledCount: number;
-  documents: Models.Document[];
-};
-
-export const getRecentAppointmentList = async (): Promise<AppointmentsDTO> => {
+export const getRecentAppointmentList = async () => {
   try {
     const appointments = await databases.listDocuments(
       DATABASE_ID!,
@@ -87,13 +79,6 @@ export const getRecentAppointmentList = async (): Promise<AppointmentsDTO> => {
     return parseStringify(data);
   } catch (error) {
     console.error(error);
-    return {
-      totalCount: 0,
-      documents: [],
-      scheduledCount: 0,
-      pendingCount: 0,
-      cancelledCount: 0,
-    };
   }
 };
 
