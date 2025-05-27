@@ -63,28 +63,28 @@ export const columns: ColumnDef<Appointment>[] = [
   {
     id: "actions",
     header: () => <div className="pl-4">Ações</div>,
-    // cell: ({ row: { original: appointment } }) => {
-    //   return (
-    //     <div className="flex gap-1">
-    //       <AppointmenteModal
-    //         patientId={appointment.patient.$id}
-    //         userId={appointment.userId}
-    //         appointment={appointment}
-    //         type="schedule"
-    //         title="Consulta agendada"
-    //         description="Por favor, confirme os seguintes detalhes para agendar."
-    //       />
+    cell: ({ row: { original: appointment } }) => {
+      return (
+        <div className="flex gap-1">
+          <AppointmenteModal
+            patientId={appointment.patient.$id}
+            userId={appointment.userId}
+            appointment={appointment}
+            type="schedule"
+            title="Consulta agendada"
+            description="Por favor, confirme os seguintes detalhes para agendar."
+          />
 
-    //       <AppointmenteModal
-    //         patientId={appointment.patient.$id}
-    //         userId={appointment.userId}
-    //         appointment={appointment}
-    //         type="cancel"
-    //         title="Cancelar consulta"
-    //         description="Tem certeza de que deseja cancelar seu agendamento?"
-    //       />
-    //     </div>
-    //   );
-    // },
+          <AppointmenteModal
+            patientId={appointment.patient.$id}
+            userId={appointment.userId}
+            appointment={appointment}
+            type="cancel"
+            title="Cancelar consulta"
+            description="Tem certeza de que deseja cancelar seu agendamento?"
+          />
+        </div>
+      );
+    },
   },
 ];
